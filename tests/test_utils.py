@@ -88,3 +88,13 @@ def test_timer():
     assert total == 4950
     assert timer.elapsed is not None
     assert timer.elapsed >= 0
+
+def test_preprocessing_and_windowing_config():
+    config = load_config()
+
+    assert config["preprocessing"]["normalization"] == "standard_scaler"
+    assert config["preprocessing"]["automata_dimension_reduction"] == "pca"
+    assert config["preprocessing"]["automata_n_components"] == 1
+
+    assert config["windowing"]["sequence_length"] == 32
+    assert config["windowing"]["label_strategy"] == "last_time_step"

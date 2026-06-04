@@ -6,13 +6,7 @@
     "device": {
         "type": "auto"
     },
-    "random_seeds": [
-        42,
-        123,
-        2026,
-        7,
-        999
-    ],
+    "random_seeds": [42, 123, 2026, 7, 999],
     "training": {
         "max_epochs": 50,
         "batch_size": 32,
@@ -22,44 +16,28 @@
         "loss_function": "binary_cross_entropy"
     },
     "models": {
-        "enabled_models": [
-            "lstm",
-            "gru",
-            "cnn1d",
-            "automata"
-        ],
-        "default_sequence_length": 32
+        "enabled_models": ["lstm", "gru", "cnn1d", "automata"]
+    },
+    "preprocessing": {
+        "normalization": "standard_scaler",
+        "automata_dimension_reduction": "pca",
+        "automata_n_components": 1
+    },
+    "windowing": {
+        "sequence_length": 32,
+        "label_strategy": "last_time_step"
     },
     "automata": {
         "default_window_size": 4,
         "default_alphabet_size": 3,
-        "window_size_values": [
-            3,
-            4,
-            5,
-            6
-        ],
-        "alphabet_size_values": [
-            3,
-            4,
-            5,
-            6
-        ],
-        "smoothing": 1e-08
+        "window_size_values": [3, 4, 5, 6],
+        "alphabet_size_values": [3, 4, 5, 6],
+        "smoothing": 1e-8
     },
     "experiments": {
-        "scenarios": [
-            "original",
-            "gaussian_noise",
-            "unseen"
-        ],
+        "scenarios": ["original", "gaussian_noise", "unseen"],
         "main_metric": "f1_score",
-        "metrics": [
-            "accuracy",
-            "precision",
-            "recall",
-            "f1_score"
-        ]
+        "metrics": ["accuracy", "precision", "recall", "f1_score"]
     },
     "paths": {
         "log_dir": "experiments/logs",
