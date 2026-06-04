@@ -25,7 +25,11 @@ def test_load_skab_config():
 
     assert config["dataset"]["name"] == "SKAB"
     assert config["dataset"]["target_column"] == "anomaly"
-    assert config["dataset"]["split_strategy"] == "group_kfold"
+    assert config["dataset"]["split_strategy"] == "stratified_group_kfold"
+    assert config["dataset"]["fallback_split_strategy"] == "group_kfold"
+    assert config["dataset"]["n_splits"] == 5
+    assert config["dataset"]["validation_n_splits"] == 4
+    assert config["dataset"]["split_seed"] == 42
 
 
 def test_load_batadal_config():

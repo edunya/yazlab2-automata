@@ -15,7 +15,12 @@
             "source_group",
             "source_file"
         ],
-        "split_strategy": "group_kfold",
-        "n_splits": 5
+        "split_strategy": "stratified_group_kfold",
+        "fallback_split_strategy": "group_kfold",
+        "n_splits": 5,
+        "validation_strategy": "stratified_group_kfold",
+        "validation_fallback_strategy": "group_kfold",
+        "validation_n_splits": 4,
+        "split_seed": 42
     }
 }
