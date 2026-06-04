@@ -46,3 +46,9 @@ reports/*.pdf
 # Temporary files
 tmp/
 temp/
+
+# Generated full-run outputs kept locally
+experiments/controlled_runs/
+
+# Temporary archives prepared for reporting
+final_results_for_report.zip
