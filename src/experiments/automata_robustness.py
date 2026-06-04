@@ -192,6 +192,9 @@ class AutomataParameterSweepResult:
         for scenario_name, result in self.results.items():
             setting = self.settings[scenario_name]
             metrics = result.evaluation_result.as_dict()
+            transition_structure = compute_automata_transition_structure(
+                result.automata
+            )
 
             rows.append({
                 "dataset": self.dataset,
@@ -200,7 +203,10 @@ class AutomataParameterSweepResult:
                 "context_length": setting.context_length,
                 "window_size": setting.window_size,
                 "alphabet_size": setting.alphabet_size,
-                "state_count": result.automata_summary["state_count"],
+                "state_count": transition_structure["state_count"],
+                "observed_transition_count": transition_structure["observed_transition_count"],
+                "possible_transition_count": transition_structure["possible_transition_count"],
+                "transition_density": transition_structure["transition_density"],
                 "threshold": result.calibration_result.threshold,
                 "accuracy": metrics["accuracy"],
                 "precision": metrics["precision"],
@@ -634,3 +640,41 @@ def run_skab_automata_gaussian_robustness_fold(
         groups=groups,
         timestamps=None
     )
+
+def compute_automata_transition_structure(
+    automata: ProbabilisticAutomata
+) -> Dict[str, Any]:
+    """
+    Compute observed transition structure statistics.
+
+    Transition density is defined as the proportion of possible directed
+    state-to-state transitions that were actually observed during
+    automata training.
+    """
+    if not automata.is_fitted_:
+        raise RuntimeError("ProbabilisticAutomata must be fitted first.")
+
+    state_count = int(len(automata.states_))
+
+    observed_transition_count = int(
+        sum(
+            len(outgoing_transitions)
+            for outgoing_transitions
+            in automata.transition_counts_.values()
+        )
+    )
+
+    possible_transition_count = int(state_count * state_count)
+
+    transition_density = (
+        float(observed_transition_count / possible_transition_count)
+        if possible_transition_count > 0
+        else 0.0
+    )
+
+    return {
+        "state_count": state_count,
+        "observed_transition_count": observed_transition_count,
+        "possible_transition_count": possible_transition_count,
+        "transition_density": transition_density
+    }

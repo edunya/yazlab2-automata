@@ -308,3 +308,9 @@ def test_reporting_config():
         "lstm", "gru", "cnn1d"
     ]
     assert statistical_config["scenario"] == "original"
+
+    assert reporting_config["generate_transition_density_heatmaps"] is True
+    assert (
+        reporting_config["transition_density_definition"]
+        == "observed_directed_transitions_divided_by_state_count_squared"
+    )

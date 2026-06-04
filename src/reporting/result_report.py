@@ -298,7 +298,10 @@ def build_automata_parameter_summary(
             "average_precision",
             "training_seconds",
             "inference_seconds",
-            "state_count"
+            "state_count",
+            "observed_transition_count",
+            "possible_transition_count",
+            "transition_density"
         ]
         if metric in parameter_rows.columns
     ]
@@ -507,6 +510,57 @@ def plot_parameter_heatmap(
 
     return figure, axis
 
+def plot_transition_density_heatmap(
+    parameter_summary: pd.DataFrame,
+    dataset: str,
+    save_path: str | Path,
+    dpi: int = 300
+):
+    """
+    Plot mean transition density across automata parameter combinations.
+    """
+    dataset_rows = parameter_summary[
+        parameter_summary["dataset"] == dataset
+    ]
+
+    if dataset_rows.empty:
+        raise ValueError(
+            f"No automata parameter results found for dataset: {dataset}"
+        )
+
+    if "transition_density_mean" not in dataset_rows.columns:
+        raise ValueError(
+            "Parameter summary does not contain transition_density_mean."
+        )
+
+    heatmap_table = dataset_rows.pivot(
+        index="window_size",
+        columns="alphabet_size",
+        values="transition_density_mean"
+    )
+
+    figure, axis = plt.subplots(figsize=(7, 5))
+
+    sns.heatmap(
+        heatmap_table,
+        annot=True,
+        fmt=".4f",
+        ax=axis
+    )
+
+    axis.set_title(
+        f"{dataset} Automata Parameter Analysis — Transition Density"
+    )
+    axis.set_xlabel("Alphabet Size")
+    axis.set_ylabel("PAA / SAX Word Size")
+
+    figure.tight_layout()
+
+    output_path = Path(save_path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    figure.savefig(output_path, dpi=dpi, bbox_inches="tight")
+
+    return figure, axis
 
 def plot_automata_graph_from_edges(
     edge_table: pd.DataFrame,
@@ -800,6 +854,28 @@ def generate_result_report_package(
             figure_paths[
                 f"{_safe_name(dataset)}_automata_parameter_heatmap"
             ] = parameter_heatmap_path
+
+            if "transition_density_mean" in parameter_summary.columns:
+                density_heatmap_path = (
+                    figures_dir
+                    / (
+                        f"{_safe_name(dataset)}"
+                        "__automata_transition_density_heatmap.png"
+                    )
+                )
+
+                density_figure, _ = plot_transition_density_heatmap(
+                    parameter_summary=parameter_summary,
+                    dataset=dataset,
+                    save_path=density_heatmap_path,
+                    dpi=dpi
+                )
+
+                plt.close(density_figure)
+                figure_paths[
+                    f"{_safe_name(dataset)}"
+                    "_automata_transition_density_heatmap"
+                ] = density_heatmap_path
 
     if artifacts_dir.exists():
         for task_directory in sorted(artifacts_dir.iterdir()):

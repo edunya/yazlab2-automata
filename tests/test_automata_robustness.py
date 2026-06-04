@@ -12,6 +12,7 @@ import pandas as pd
 
 from src.data.splitting import DatasetSplit
 from src.experiments.automata_robustness import (
+    compute_automata_transition_structure,
     fit_clean_automata_pipeline,
     run_automata_gaussian_robustness_split,
     run_automata_parameter_analysis_split
@@ -215,3 +216,14 @@ def test_automata_parameter_analysis_returns_configured_grid_table():
     assert "f1_score" in result_table.columns
     assert "state_count" in result_table.columns
     assert "training_seconds" in result_table.columns
+
+    assert "observed_transition_count" in result_table.columns
+    assert "possible_transition_count" in result_table.columns
+    assert "transition_density" in result_table.columns
+
+    assert result_table["observed_transition_count"].ge(1).all()
+    assert result_table["possible_transition_count"].ge(
+        result_table["observed_transition_count"]
+    ).all()
+
+    assert result_table["transition_density"].between(0.0, 1.0).all()

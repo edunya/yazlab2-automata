@@ -161,6 +161,8 @@
         "automata_curve_score": "score_minus_calibrated_threshold",
         "generate_transition_figures": true,
         "generate_parameter_heatmaps": true,
+        "generate_transition_density_heatmaps": true,
+        "transition_density_definition": "observed_directed_transitions_divided_by_state_count_squared",
         "statistical_analysis": {
             "method": "paired_wilcoxon",
             "multiple_comparison_correction": "holm_bonferroni",

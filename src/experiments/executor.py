@@ -34,6 +34,7 @@ from src.data.splitting import (
     create_skab_nested_splits
 )
 from src.experiments.automata_robustness import (
+    compute_automata_transition_structure,
     run_batadal_automata_gaussian_robustness,
     run_skab_automata_gaussian_robustness_fold
 )
@@ -260,6 +261,10 @@ def _rows_from_automata_robustness_result(
     """
     rows = []
 
+    transition_structure = compute_automata_transition_structure(
+        result.fitted_pipeline.automata
+    )
+
     for scenario_name, scenario_result in result.scenario_results.items():
         metrics = scenario_result.evaluation_result.as_dict()
         runtime = scenario_result.runtime_record.as_dict()
@@ -267,6 +272,7 @@ def _rows_from_automata_robustness_result(
 
         row = {
             "scenario": scenario_name,
+            **transition_structure,
             "noise_level": scenario_result.noise_level,
             "clean_pipeline_reused": scenario_result.clean_pipeline_reused,
             **metrics,
@@ -294,13 +300,16 @@ def _row_from_automata_parameter_result(
     """
     metrics = result.evaluation_result.as_dict()
     runtime = result.runtime_record.as_dict()
+    transition_structure = compute_automata_transition_structure(
+        result.automata
+    )
 
     row = {
         "scenario": "original",
         **metrics,
         "training_seconds": runtime["training_seconds"],
         "inference_seconds": runtime["inference_seconds"],
-        "state_count": result.automata_summary["state_count"],
+        **transition_structure,
         "threshold": result.calibration_result.threshold
     }
 

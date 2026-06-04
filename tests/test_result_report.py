@@ -117,6 +117,9 @@ def build_synthetic_export_directory(tmp_path: Path) -> Path:
             "precision": 0.72,
             "recall": 0.72,
             "state_count": 8,
+            "observed_transition_count": 4,
+            "possible_transition_count": 64,
+            "transition_density": 0.0625,
             "training_seconds": 1.0,
             "inference_seconds": 0.2
         },
@@ -133,6 +136,9 @@ def build_synthetic_export_directory(tmp_path: Path) -> Path:
             "precision": 0.75,
             "recall": 0.75,
             "state_count": 12,
+            "observed_transition_count": 6,
+            "possible_transition_count": 144,
+            "transition_density": 0.0416666667,
             "training_seconds": 2.0,
             "inference_seconds": 0.3
         }
@@ -276,6 +282,12 @@ def test_report_package_generates_tables_and_figures(tmp_path):
         report_dir
         / "figures"
         / "automata_robustness__BATADAL__state_graph.png"
+    ).exists()
+
+    assert (
+        report_dir
+        / "figures"
+        / "BATADAL__automata_transition_density_heatmap.png"
     ).exists()
 
 
