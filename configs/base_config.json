@@ -58,6 +58,8 @@
         "default_alphabet_size": 3,
         "window_size_values": [3, 4, 5, 6],
         "alphabet_size_values": [3, 4, 5, 6],
+        "sax_normalization": "train_zscore",
+        "sax_breakpoint_strategy": "gaussian",
         "smoothing": 1e-8
     },
     "experiments": {

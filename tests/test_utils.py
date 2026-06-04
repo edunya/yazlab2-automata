@@ -130,3 +130,15 @@ def test_training_pipeline_config():
     assert training_config["early_stopping_patience"] == 5
     assert training_config["num_workers"] == 0
     assert training_config["use_amp"] is True
+
+def test_automata_symbolic_config():
+    config = load_config()
+
+    automata_config = config["automata"]
+
+    assert automata_config["default_window_size"] == 4
+    assert automata_config["default_alphabet_size"] == 3
+    assert automata_config["window_size_values"] == [3, 4, 5, 6]
+    assert automata_config["alphabet_size_values"] == [3, 4, 5, 6]
+    assert automata_config["sax_normalization"] == "train_zscore"
+    assert automata_config["sax_breakpoint_strategy"] == "gaussian"
