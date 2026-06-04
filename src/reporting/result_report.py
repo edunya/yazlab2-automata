@@ -50,6 +50,9 @@ from src.visualization.plot_roc_pr import (
 from src.visualization.plot_transition_heatmap import (
     plot_transition_heatmap
 )
+from src.reporting.statistical_analysis import (
+    build_paired_wilcoxon_summary
+)
 
 
 BASELINE_TASK_TYPES = {
@@ -591,7 +594,11 @@ def generate_result_report_package(
     results_dir: str | Path,
     output_dir: Optional[str | Path] = None,
     dpi: int = 300,
-    automata_graph_max_edges: int = 30
+    automata_graph_max_edges: int = 30,
+    statistical_metric: str = "f1_score",
+    statistical_models: Optional[list[str]] = None,
+    statistical_scenario: str = "original",
+    statistical_alpha: float = 0.05
 ) -> Dict[str, Any]:
     """
     Generate report-ready tables and figures from completed experiment output.
@@ -621,6 +628,25 @@ def generate_result_report_package(
     original_summary_path = tables_dir / "original_model_summary.csv"
     original_summary.to_csv(original_summary_path, index=False)
     table_paths["original_model_summary"] = original_summary_path
+
+    statistical_summary = build_paired_wilcoxon_summary(
+        results_table=results_table,
+        metric=statistical_metric,
+        compared_models=(
+            statistical_models
+            if statistical_models is not None
+            else ["lstm", "gru", "cnn1d"]
+        ),
+        scenario=statistical_scenario,
+        alpha=statistical_alpha
+    )
+
+    if not statistical_summary.empty:
+        statistical_path = (
+            tables_dir / "statistical_significance_summary.csv"
+        )
+        statistical_summary.to_csv(statistical_path, index=False)
+        table_paths["statistical_significance_summary"] = statistical_path
 
     robustness_summary = build_robustness_degradation_summary(results_table)
 

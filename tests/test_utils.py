@@ -294,3 +294,17 @@ def test_reporting_config():
 
     assert reporting_config["generate_transition_figures"] is True
     assert reporting_config["generate_parameter_heatmaps"] is True
+
+    statistical_config = reporting_config["statistical_analysis"]
+
+    assert statistical_config["method"] == "paired_wilcoxon"
+    assert (
+        statistical_config["multiple_comparison_correction"]
+        == "holm_bonferroni"
+    )
+    assert statistical_config["metric"] == "f1_score"
+    assert statistical_config["alpha"] == 0.05
+    assert statistical_config["compared_models"] == [
+        "lstm", "gru", "cnn1d"
+    ]
+    assert statistical_config["scenario"] == "original"

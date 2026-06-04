@@ -184,13 +184,19 @@ def main() -> None:
         output_dir=output_dir
     )
 
+    statistical_config = base_config["reporting"]["statistical_analysis"]
+
     report_output = generate_result_report_package(
         results_dir=output_dir,
         output_dir=output_dir / "report_package",
         dpi=int(base_config["visualization"]["dpi"]),
         automata_graph_max_edges=int(
             base_config["visualization"]["automata_graph_max_edges"]
-        )
+        ),
+        statistical_metric=statistical_config["metric"],
+        statistical_models=statistical_config["compared_models"],
+        statistical_scenario=statistical_config["scenario"],
+        statistical_alpha=float(statistical_config["alpha"])
     )
 
     print(f"Result summary written to: {exported_result_paths['summary_json']}")

@@ -60,13 +60,19 @@ def main() -> None:
 
     config = load_config()
 
+    statistical_config = config["reporting"]["statistical_analysis"]
+
     output = generate_result_report_package(
         results_dir=args.results_dir,
         output_dir=args.output_dir,
         dpi=int(config["visualization"]["dpi"]),
         automata_graph_max_edges=int(
             config["visualization"]["automata_graph_max_edges"]
-        )
+        ),
+        statistical_metric=statistical_config["metric"],
+        statistical_models=statistical_config["compared_models"],
+        statistical_scenario=statistical_config["scenario"],
+        statistical_alpha=float(statistical_config["alpha"])
     )
 
     print(
