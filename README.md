@@ -1,9 +1,9 @@
 # From Black-Box to Explainability: Probabilistic Automata for Time Series Analysis
 
-**Ders:** NaN
-**Bölüm:** NaN
-**Grup No:** NaN
-**Öğrenci(ler):** NaN
+**Ders:** Yazılım Geliştirme Laboratuvarı
+**Bölüm:** Bilişim Sistemleri Mühendisliği
+**Grup No:** 13
+**Öğrenci(ler):** Hüseyin Emir DÜNYA, Ceren KARUK
 
 ---
 
