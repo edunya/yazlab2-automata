@@ -1,0 +1,49 @@
+﻿{
+    "sequence_id":  "test::test",
+    "original_states":  [
+                            "cabb",
+                            "bbca"
+                        ],
+    "mapped_states":  [
+                          "cabb",
+                          "bbca"
+                      ],
+    "state_trace":  [
+                        {
+                            "original_state":  "cabb",
+                            "mapped_state":  "cabb",
+                            "distance":  0,
+                            "status":  "seen",
+                            "mapping_method":  "exact_match",
+                            "position":  0
+                        },
+                        {
+                            "original_state":  "bbca",
+                            "mapped_state":  "bbca",
+                            "distance":  0,
+                            "status":  "seen",
+                            "mapping_method":  "exact_match",
+                            "position":  1
+                        }
+                    ],
+    "transition_trace":  [
+                             {
+                                 "transition_index":  0,
+                                 "from_state":  "cabb",
+                                 "to_state":  "bbca",
+                                 "probability":  4.5454543863636422E-10,
+                                 "log_probability":  -21.51172323231068,
+                                 "anomaly_score":  21.51172323231068
+                             }
+                         ],
+    "unseen_state_count":  0,
+    "path_probability":  4.5454543863636495E-10,
+    "log_path_probability":  -21.51172323231068,
+    "anomaly_score":  21.51172323231068,
+    "threshold":  18.42068151395207,
+    "decision":  1,
+    "decision_label":  "anomaly",
+    "decision_margin":  3.0910417183586105,
+    "confidence_score":  0.07740685135291839,
+    "confidence_definition":  "relative_threshold_margin_not_probability"
+}

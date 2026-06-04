@@ -1,0 +1,9 @@
+dataset,scenario,run_count,unseen_involved_decisions_mean,unseen_decision_ratio_mean,unseen_decision_ratio_std,unseen_state_occurrences_mean,unseen_state_occurrence_ratio_mean,unseen_state_occurrence_ratio_std
+BATADAL,gaussian_noise_0.01,1,11.0,0.0136815920398009,0.0,12.0,0.0074626865671641,0.0
+BATADAL,gaussian_noise_0.05,1,11.0,0.0136815920398009,0.0,12.0,0.0074626865671641,0.0
+BATADAL,gaussian_noise_0.10,1,13.0,0.0161691542288557,0.0,14.0,0.0087064676616915,0.0
+BATADAL,original,1,11.0,0.0136815920398009,0.0,12.0,0.0074626865671641,0.0
+SKAB,gaussian_noise_0.01,5,0.0,0.0,0.0,0.0,0.0,0.0
+SKAB,gaussian_noise_0.05,5,0.0,0.0,0.0,0.0,0.0,0.0
+SKAB,gaussian_noise_0.10,5,0.0,0.0,0.0,0.0,0.0,0.0
+SKAB,original,5,0.0,0.0,0.0,0.0,0.0,0.0
