@@ -60,6 +60,10 @@
         "alphabet_size_values": [3, 4, 5, 6],
         "sax_normalization": "train_zscore",
         "sax_breakpoint_strategy": "gaussian",
+        "learning_strategy": "normal_train_runs",
+        "score_strategy": "mean_negative_log_probability",
+        "threshold_strategy": "validation_best_f1",
+        "threshold_tie_break": "higher_precision_then_higher_threshold",
         "smoothing": 1e-8
     },
     "experiments": {

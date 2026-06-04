@@ -140,5 +140,17 @@ def test_automata_symbolic_config():
     assert automata_config["default_alphabet_size"] == 3
     assert automata_config["window_size_values"] == [3, 4, 5, 6]
     assert automata_config["alphabet_size_values"] == [3, 4, 5, 6]
+
     assert automata_config["sax_normalization"] == "train_zscore"
     assert automata_config["sax_breakpoint_strategy"] == "gaussian"
+
+    assert automata_config["learning_strategy"] == "normal_train_runs"
+    assert (
+        automata_config["score_strategy"]
+        == "mean_negative_log_probability"
+    )
+    assert automata_config["threshold_strategy"] == "validation_best_f1"
+    assert (
+        automata_config["threshold_tie_break"]
+        == "higher_precision_then_higher_threshold"
+    )
