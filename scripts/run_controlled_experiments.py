@@ -149,28 +149,30 @@ def main() -> None:
     datasets, configs_by_dataset = load_real_datasets_and_configs()
 
     if args.benchmark:
+        output_dir = args.output_dir / "benchmark_results"
+
         rows = execute_benchmark_tasks(
             plan=plan,
             datasets=datasets,
             configs_by_dataset=configs_by_dataset,
             base_config=base_config,
             authorization_phrase=args.authorization,
-            device=args.device
+            device=args.device,
+            artifacts_dir=output_dir / "artifacts"
         )
 
-        output_dir = args.output_dir / "benchmark_results"
-
     else:
+        output_dir = args.output_dir / "final_results"
+
         rows = execute_confirmed_full_plan(
             plan=plan,
             datasets=datasets,
             configs_by_dataset=configs_by_dataset,
             base_config=base_config,
             authorization_phrase=args.authorization,
-            device=args.device
+            device=args.device,
+            artifacts_dir=output_dir / "artifacts"
         )
-
-        output_dir = args.output_dir / "final_results"
 
     exported_result_paths = export_flat_result_rows(
         result_rows=rows,

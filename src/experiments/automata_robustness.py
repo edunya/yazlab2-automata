@@ -66,6 +66,8 @@ from src.experiments.scenarios import (
 )
 from src.utils.timer import Timer
 
+from src.automata.explainability import AutomataDecisionExplanation
+
 
 @dataclass
 class FittedAutomataPipeline:
@@ -115,6 +117,7 @@ class AutomataScenarioEvaluation:
     test_scores: np.ndarray
     test_labels: np.ndarray
     test_target_indices: np.ndarray
+    test_explanations: tuple[AutomataDecisionExplanation, ...]
 
     def summary(self) -> Dict[str, Any]:
         """
@@ -126,7 +129,8 @@ class AutomataScenarioEvaluation:
             "clean_pipeline_reused": self.clean_pipeline_reused,
             "runtime": self.runtime_record.as_dict(),
             "metrics": self.evaluation_result.as_dict(),
-            "unseen_analysis": self.unseen_summary.as_dict()
+            "unseen_analysis": self.unseen_summary.as_dict(),
+            "explanation_count": len(self.test_explanations)
         }
 
 
@@ -424,7 +428,8 @@ def _evaluate_fitted_automata_on_test_partition(
         unseen_summary=unseen_summary,
         test_scores=decisions.scores,
         test_labels=decisions.labels,
-        test_target_indices=decisions.target_indices
+        test_target_indices=decisions.target_indices,
+        test_explanations=decisions.explanations
     )
 
 

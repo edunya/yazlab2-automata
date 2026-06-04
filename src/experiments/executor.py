@@ -18,6 +18,7 @@ from copy import deepcopy
 from dataclasses import dataclass
 from typing import Any, Dict, Iterable, Mapping, Optional
 
+from pathlib import Path
 import pandas as pd
 import torch
 
@@ -43,6 +44,10 @@ from src.experiments.deep_learning_robustness import (
 from src.experiments.scenarios import (
     AutomataParameterSetting,
     build_config_for_automata_setting
+)
+from src.experiments.artifact_export import (
+    export_automata_robustness_artifacts,
+    export_deep_learning_robustness_artifacts
 )
 
 
@@ -368,7 +373,8 @@ def execute_executable_task(
     task: ExperimentTask,
     datasets: DatasetRegistry,
     configs_by_dataset: Mapping[str, Dict[str, Any]],
-    device: Optional[str | torch.device] = None
+    device: Optional[str | torch.device] = None,
+    artifacts_dir: Optional[str | Path] = None
 ) -> list[Dict[str, Any]]:
     """
     Execute one task that requires actual computation.
@@ -415,6 +421,13 @@ def execute_executable_task(
         else:
             raise ValueError(f"Unsupported task dataset: {task.dataset}")
 
+        if artifacts_dir is not None:
+            export_deep_learning_robustness_artifacts(
+                task_id=task.task_id,
+                result=result,
+                output_dir=artifacts_dir
+            )
+
         return _rows_from_deep_learning_robustness_result(task, result)
 
     if task.task_type == "automata_robustness":
@@ -434,6 +447,13 @@ def execute_executable_task(
             )
         else:
             raise ValueError(f"Unsupported task dataset: {task.dataset}")
+
+        if artifacts_dir is not None:
+            export_automata_robustness_artifacts(
+                task_id=task.task_id,
+                result=result,
+                output_dir=artifacts_dir
+            )
 
         return _rows_from_automata_robustness_result(task, result)
 
@@ -506,7 +526,8 @@ def execute_benchmark_tasks(
     configs_by_dataset: Mapping[str, Dict[str, Any]],
     base_config: Dict[str, Any],
     authorization_phrase: Optional[str],
-    device: Optional[str | torch.device] = None
+    device: Optional[str | torch.device] = None,
+    artifacts_dir: Optional[str | Path] = None
 ) -> list[Dict[str, Any]]:
     """
     Execute only configured lightweight benchmark tasks.
@@ -528,7 +549,8 @@ def execute_benchmark_tasks(
                 task=task,
                 datasets=datasets,
                 configs_by_dataset=configs_by_dataset,
-                device=device
+                device=device,
+                artifacts_dir=artifacts_dir
             )
         )
 
@@ -541,7 +563,8 @@ def execute_confirmed_full_plan(
     configs_by_dataset: Mapping[str, Dict[str, Any]],
     base_config: Dict[str, Any],
     authorization_phrase: Optional[str],
-    device: Optional[str | torch.device] = None
+    device: Optional[str | torch.device] = None,
+    artifacts_dir: Optional[str | Path] = None
 ) -> list[Dict[str, Any]]:
     """
     Execute the final plan only after explicit full-run authorization.
@@ -563,7 +586,8 @@ def execute_confirmed_full_plan(
                 task=task,
                 datasets=datasets,
                 configs_by_dataset=configs_by_dataset,
-                device=device
+                device=device,
+                artifacts_dir=artifacts_dir
             )
         else:
             task_rows = materialize_reused_task_rows(

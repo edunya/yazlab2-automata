@@ -256,3 +256,12 @@ def test_controlled_execution_guard_config():
     assert execution_config["benchmark_task_ids"] == [
         "deep_learning_robustness__BATADAL__gru__seed42"
     ]
+
+def test_detailed_artifact_export_config():
+    config = load_config()
+
+    artifact_config = config["execution"]["export_artifacts"]
+
+    assert artifact_config["save_sample_predictions"] is True
+    assert artifact_config["save_automata_explanations"] is True
+    assert artifact_config["save_automata_transition_tables"] is True
