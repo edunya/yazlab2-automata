@@ -3,14 +3,19 @@
         "name": "BATADAL",
         "raw_data_dir": "data/raw/BATADAL",
         "processed_data_dir": "data/processed/BATADAL",
-        "used_file": "Training Dataset 2",
-        "target_column": null,
-        "time_columns": [],
+        "used_file": "training_dataset_2.csv",
+        "csv_separator": ",",
+        "strip_column_names": true,
+        "target_column": "ATT_FLAG",
+        "time_columns": ["DATETIME"],
+        "datetime_format": "%d/%m/%y %H",
+        "normal_label": -999,
+        "anomaly_label": 1,
         "split_strategy": "time_ordered",
         "split_ratios": {
-            "train": 0.6,
-            "validation": 0.2,
-            "test": 0.2
+            "train": 0.60,
+            "validation": 0.20,
+            "test": 0.20
         }
     }
 }
