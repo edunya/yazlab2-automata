@@ -117,3 +117,16 @@ def test_model_architecture_config():
     assert cnn_config["conv_channels"] == [32, 64]
     assert cnn_config["kernel_size"] == 3
     assert cnn_config["dropout"] == 0.2
+
+def test_training_pipeline_config():
+    config = load_config()
+
+    training_config = config["training"]
+
+    assert training_config["loss_function"] == "bce_with_logits"
+    assert training_config["class_imbalance_strategy"] == "train_pos_weight"
+    assert training_config["batch_size"] == 32
+    assert training_config["max_epochs"] == 50
+    assert training_config["early_stopping_patience"] == 5
+    assert training_config["num_workers"] == 0
+    assert training_config["use_amp"] is True

@@ -11,9 +11,14 @@
         "max_epochs": 50,
         "batch_size": 32,
         "early_stopping_patience": 5,
+        "early_stopping_min_delta": 0.0,
         "learning_rate": 0.001,
         "optimizer": "adam",
-        "loss_function": "binary_cross_entropy"
+        "loss_function": "bce_with_logits",
+        "class_imbalance_strategy": "train_pos_weight",
+        "classification_threshold": 0.5,
+        "num_workers": 0,
+        "use_amp": true
     },
     
     "models": {
