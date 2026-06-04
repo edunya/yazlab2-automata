@@ -221,3 +221,22 @@ def test_robustness_and_parameter_analysis_config():
     assert parameter_config["window_size_values"] == [3, 4, 5, 6]
     assert parameter_config["alphabet_size_values"] == [3, 4, 5, 6]
     assert parameter_config["primary_metric"] == "f1_score"
+
+def test_execution_plan_config_requires_confirmation():
+    config = load_config()
+
+    execution_config = config["execution"]
+
+    assert execution_config["full_run_requires_confirmation"] is True
+    assert execution_config["benchmark_before_full_run"] is True
+    assert execution_config["skab_fold_count"] == 5
+    assert (
+        execution_config["reuse_default_automata_parameter_result"]
+        is True
+    )
+
+    default_setting = execution_config["default_automata_parameter_setting"]
+
+    assert default_setting["window_size"] == 4
+    assert default_setting["alphabet_size"] == 3
+    assert execution_config["result_export_formats"] == ["csv", "json"]

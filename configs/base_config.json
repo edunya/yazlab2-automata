@@ -100,6 +100,17 @@
             }
         }
     },
+    "execution": {
+        "full_run_requires_confirmation": true,
+        "benchmark_before_full_run": true,
+        "skab_fold_count": 5,
+        "reuse_default_automata_parameter_result": true,
+        "default_automata_parameter_setting": {
+            "window_size": 4,
+            "alphabet_size": 3
+        },
+        "result_export_formats": ["csv", "json"]
+    },
     "paths": {
         "log_dir": "experiments/logs",
         "metrics_dir": "experiments/metrics",
