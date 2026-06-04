@@ -18,9 +18,13 @@ from copy import deepcopy
 from dataclasses import dataclass
 from typing import Any, Dict, Iterable, Mapping, Optional
 
+
 from pathlib import Path
 import pandas as pd
 import torch
+import json
+
+import numpy as np
 
 from src.automata.run_experiment import run_automata_original_split
 from src.data.load_batadal import prepare_batadal_features_target
@@ -35,7 +39,8 @@ from src.experiments.automata_robustness import (
 )
 from src.experiments.batch_orchestration import (
     ExperimentPlan,
-    ExperimentTask
+    ExperimentTask,
+    export_flat_result_rows
 )
 from src.experiments.deep_learning_robustness import (
     run_batadal_deep_learning_gaussian_robustness,
@@ -519,6 +524,93 @@ def materialize_reused_task_rows(
 
     return [reused_row]
 
+def _checkpoint_json_default(value: Any) -> Any:
+    """
+    Convert common NumPy values to JSON-compatible Python objects.
+    """
+    if isinstance(value, np.integer):
+        return int(value)
+
+    if isinstance(value, np.floating):
+        return float(value)
+
+    if isinstance(value, np.ndarray):
+        return value.tolist()
+
+    raise TypeError(
+        f"Object of type {type(value).__name__} is not JSON serializable."
+    )
+
+
+def _task_checkpoint_path(
+    checkpoint_dir: str | Path,
+    task_id: str
+) -> Path:
+    """
+    Return the checkpoint file path for one completed experiment task.
+    """
+    completed_tasks_dir = Path(checkpoint_dir) / "completed_tasks"
+    completed_tasks_dir.mkdir(parents=True, exist_ok=True)
+
+    return completed_tasks_dir / f"{task_id}.json"
+
+
+def save_completed_task_checkpoint(
+    task_id: str,
+    task_rows: list[Dict[str, Any]],
+    checkpoint_dir: str | Path
+) -> Path:
+    """
+    Save completed result rows for one task immediately after completion.
+    """
+    if not task_rows:
+        raise ValueError("A completed task checkpoint must contain result rows.")
+
+    checkpoint_path = _task_checkpoint_path(
+        checkpoint_dir=checkpoint_dir,
+        task_id=task_id
+    )
+
+    with checkpoint_path.open("w", encoding="utf-8") as checkpoint_file:
+        json.dump(
+            task_rows,
+            checkpoint_file,
+            ensure_ascii=False,
+            indent=2,
+            default=_checkpoint_json_default
+        )
+
+    return checkpoint_path
+
+
+def load_completed_task_checkpoint(
+    task_id: str,
+    checkpoint_dir: str | Path
+) -> Optional[list[Dict[str, Any]]]:
+    """
+    Load saved task rows when a previous full run completed this task.
+
+    Returns None when no checkpoint exists, meaning the task still needs
+    actual execution.
+    """
+    checkpoint_path = _task_checkpoint_path(
+        checkpoint_dir=checkpoint_dir,
+        task_id=task_id
+    )
+
+    if not checkpoint_path.exists():
+        return None
+
+    with checkpoint_path.open("r", encoding="utf-8") as checkpoint_file:
+        task_rows = json.load(checkpoint_file)
+
+    if not isinstance(task_rows, list) or not task_rows:
+        raise ValueError(
+            f"Invalid or empty task checkpoint: {checkpoint_path}"
+        )
+
+    return task_rows
+
 
 def execute_benchmark_tasks(
     plan: ExperimentPlan,
@@ -564,7 +656,9 @@ def execute_confirmed_full_plan(
     base_config: Dict[str, Any],
     authorization_phrase: Optional[str],
     device: Optional[str | torch.device] = None,
-    artifacts_dir: Optional[str | Path] = None
+    artifacts_dir: Optional[str | Path] = None,
+    checkpoint_dir: Optional[str | Path] = None,
+    resume: bool = True
 ) -> list[Dict[str, Any]]:
     """
     Execute the final plan only after explicit full-run authorization.
@@ -580,22 +674,50 @@ def execute_confirmed_full_plan(
     all_rows: list[Dict[str, Any]] = []
     completed_rows_by_task: Dict[str, list[Dict[str, Any]]] = {}
 
+    checkpoint_path = (
+        Path(checkpoint_dir)
+        if checkpoint_dir is not None
+        else None
+    )
+
     for task in plan.tasks:
-        if task.execute:
-            task_rows = execute_executable_task(
-                task=task,
-                datasets=datasets,
-                configs_by_dataset=configs_by_dataset,
-                device=device,
-                artifacts_dir=artifacts_dir
+        task_rows: Optional[list[Dict[str, Any]]] = None
+
+        if checkpoint_path is not None and resume:
+            task_rows = load_completed_task_checkpoint(
+                task_id=task.task_id,
+                checkpoint_dir=checkpoint_path
             )
-        else:
-            task_rows = materialize_reused_task_rows(
-                task=task,
-                completed_rows_by_task=completed_rows_by_task
-            )
+
+        if task_rows is None:
+            if task.execute:
+                task_rows = execute_executable_task(
+                    task=task,
+                    datasets=datasets,
+                    configs_by_dataset=configs_by_dataset,
+                    device=device,
+                    artifacts_dir=artifacts_dir
+                )
+            else:
+                task_rows = materialize_reused_task_rows(
+                    task=task,
+                    completed_rows_by_task=completed_rows_by_task
+                )
+
+            if checkpoint_path is not None:
+                save_completed_task_checkpoint(
+                    task_id=task.task_id,
+                    task_rows=task_rows,
+                    checkpoint_dir=checkpoint_path
+                )
 
         completed_rows_by_task[task.task_id] = task_rows
         all_rows.extend(task_rows)
+
+        if checkpoint_path is not None:
+            export_flat_result_rows(
+                result_rows=all_rows,
+                output_dir=checkpoint_path / "partial_results"
+            )
 
     return all_rows

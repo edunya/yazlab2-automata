@@ -115,7 +115,9 @@
             "window_size": 4,
             "alphabet_size": 3
         },
-        "result_export_formats": ["csv", "json"],
+    "result_export_formats": ["csv", "json"],
+        "resume_completed_tasks": true,
+        "checkpoint_results_after_each_task": true,
         "export_artifacts": {
             "save_sample_predictions": true,
             "save_automata_explanations": true,

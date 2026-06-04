@@ -257,6 +257,9 @@ def test_controlled_execution_guard_config():
         "deep_learning_robustness__BATADAL__gru__seed42"
     ]
 
+    assert execution_config["resume_completed_tasks"] is True
+    assert execution_config["checkpoint_results_after_each_task"] is True
+
 def test_detailed_artifact_export_config():
     config = load_config()
 

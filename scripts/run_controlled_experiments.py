@@ -172,7 +172,11 @@ def main() -> None:
             base_config=base_config,
             authorization_phrase=args.authorization,
             device=args.device,
-            artifacts_dir=output_dir / "artifacts"
+            artifacts_dir=output_dir / "artifacts",
+            checkpoint_dir=output_dir / "checkpoints",
+            resume=bool(
+                base_config["execution"]["resume_completed_tasks"]
+            )
         )
 
     exported_result_paths = export_flat_result_rows(
