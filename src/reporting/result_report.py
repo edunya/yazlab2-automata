@@ -629,24 +629,35 @@ def generate_result_report_package(
     original_summary.to_csv(original_summary_path, index=False)
     table_paths["original_model_summary"] = original_summary_path
 
-    statistical_summary = build_paired_wilcoxon_summary(
-        results_table=results_table,
-        metric=statistical_metric,
-        compared_models=(
-            statistical_models
-            if statistical_models is not None
-            else ["lstm", "gru", "cnn1d"]
-        ),
-        scenario=statistical_scenario,
-        alpha=statistical_alpha
-    )
+    statistical_required_columns = {
+        "task_type",
+        "dataset",
+        "model",
+        "scenario",
+        "fold",
+        "seed",
+        statistical_metric
+    }
 
-    if not statistical_summary.empty:
-        statistical_path = (
-            tables_dir / "statistical_significance_summary.csv"
+    if statistical_required_columns.issubset(results_table.columns):
+        statistical_summary = build_paired_wilcoxon_summary(
+            results_table=results_table,
+            metric=statistical_metric,
+            compared_models=(
+                statistical_models
+                if statistical_models is not None
+                else ["lstm", "gru", "cnn1d"]
+            ),
+            scenario=statistical_scenario,
+            alpha=statistical_alpha
         )
-        statistical_summary.to_csv(statistical_path, index=False)
-        table_paths["statistical_significance_summary"] = statistical_path
+
+        if not statistical_summary.empty:
+            statistical_path = (
+                tables_dir / "statistical_significance_summary.csv"
+            )
+            statistical_summary.to_csv(statistical_path, index=False)
+            table_paths["statistical_significance_summary"] = statistical_path
 
     robustness_summary = build_robustness_degradation_summary(results_table)
 
