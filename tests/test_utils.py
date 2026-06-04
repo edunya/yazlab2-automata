@@ -136,10 +136,21 @@ def test_automata_symbolic_config():
 
     automata_config = config["automata"]
 
+    assert automata_config["context_length"] == 32
     assert automata_config["default_window_size"] == 4
     assert automata_config["default_alphabet_size"] == 3
     assert automata_config["window_size_values"] == [3, 4, 5, 6]
     assert automata_config["alphabet_size_values"] == [3, 4, 5, 6]
+
+    assert (
+        automata_config["state_construction"]
+        == "sliding_context_paa_sax_word"
+    )
+    assert automata_config["state_label_strategy"] == "last_time_step"
+    assert (
+        automata_config["transition_target_strategy"]
+        == "destination_state_label"
+    )
 
     assert automata_config["sax_normalization"] == "train_zscore"
     assert automata_config["sax_breakpoint_strategy"] == "gaussian"
@@ -165,7 +176,6 @@ def test_automata_symbolic_config():
         == "relative_threshold_margin"
     )
     assert automata_config["confidence_is_probability"] is False
-
 def test_evaluation_and_visualization_config():
     config = load_config()
 

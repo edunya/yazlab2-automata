@@ -54,10 +54,14 @@
         "label_strategy": "last_time_step"
     },
     "automata": {
+        "context_length": 32,
         "default_window_size": 4,
         "default_alphabet_size": 3,
         "window_size_values": [3, 4, 5, 6],
         "alphabet_size_values": [3, 4, 5, 6],
+        "state_construction": "sliding_context_paa_sax_word",
+        "state_label_strategy": "last_time_step",
+        "transition_target_strategy": "destination_state_label",
         "sax_normalization": "train_zscore",
         "sax_breakpoint_strategy": "gaussian",
         "learning_strategy": "normal_train_runs",
