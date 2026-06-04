@@ -1,0 +1,72 @@
+{
+    "project": {
+        "name": "yazlab2-timeseries-automata",
+        "version": "0.1.0"
+    },
+    "device": {
+        "type": "auto"
+    },
+    "random_seeds": [
+        42,
+        123,
+        2026,
+        7,
+        999
+    ],
+    "training": {
+        "max_epochs": 50,
+        "batch_size": 32,
+        "early_stopping_patience": 5,
+        "learning_rate": 0.001,
+        "optimizer": "adam",
+        "loss_function": "binary_cross_entropy"
+    },
+    "models": {
+        "enabled_models": [
+            "lstm",
+            "gru",
+            "cnn1d",
+            "automata"
+        ],
+        "default_sequence_length": 32
+    },
+    "automata": {
+        "default_window_size": 4,
+        "default_alphabet_size": 3,
+        "window_size_values": [
+            3,
+            4,
+            5,
+            6
+        ],
+        "alphabet_size_values": [
+            3,
+            4,
+            5,
+            6
+        ],
+        "smoothing": 1e-08
+    },
+    "experiments": {
+        "scenarios": [
+            "original",
+            "gaussian_noise",
+            "unseen"
+        ],
+        "main_metric": "f1_score",
+        "metrics": [
+            "accuracy",
+            "precision",
+            "recall",
+            "f1_score"
+        ]
+    },
+    "paths": {
+        "log_dir": "experiments/logs",
+        "metrics_dir": "experiments/metrics",
+        "models_dir": "experiments/models",
+        "predictions_dir": "experiments/predictions",
+        "figures_dir": "reports/figures",
+        "tables_dir": "reports/tables"
+    }
+}

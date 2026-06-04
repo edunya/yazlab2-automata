@@ -1,0 +1,21 @@
+{
+    "dataset": {
+        "name": "SKAB",
+        "raw_data_dir": "data/raw/SKAB",
+        "processed_data_dir": "data/processed/SKAB",
+        "used_groups": [
+            "valve1",
+            "valve2"
+        ],
+        "target_column": "anomaly",
+        "group_column": "source_file",
+        "excluded_columns": [
+            "datetime",
+            "changepoint",
+            "source_group",
+            "source_file"
+        ],
+        "split_strategy": "group_kfold",
+        "n_splits": 5
+    }
+}

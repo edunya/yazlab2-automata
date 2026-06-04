@@ -1,0 +1,48 @@
+# Python virtual environment
+.venv/
+venv/
+env/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Environment variables
+.env
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Raw and processed datasets
+data/raw/
+data/interim/
+data/processed/
+
+# Experiment outputs
+experiments/logs/
+experiments/metrics/
+experiments/models/
+experiments/predictions/
+
+# Large model/checkpoint files
+*.pt
+*.pth
+*.ckpt
+*.joblib
+*.pkl
+
+# Generated PDF reports
+reports/*.pdf
+
+# Temporary files
+tmp/
+temp/

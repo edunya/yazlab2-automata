@@ -1,0 +1,16 @@
+{
+    "dataset": {
+        "name": "BATADAL",
+        "raw_data_dir": "data/raw/BATADAL",
+        "processed_data_dir": "data/processed/BATADAL",
+        "used_file": "Training Dataset 2",
+        "target_column": null,
+        "time_columns": [],
+        "split_strategy": "time_ordered",
+        "split_ratios": {
+            "train": 0.6,
+            "validation": 0.2,
+            "test": 0.2
+        }
+    }
+}
