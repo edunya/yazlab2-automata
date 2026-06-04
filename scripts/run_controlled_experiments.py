@@ -17,7 +17,15 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
+
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
 
 from src.data.load_batadal import load_batadal_dataset
 from src.data.load_skab import load_skab_dataset
@@ -28,6 +36,7 @@ from src.experiments.batch_orchestration import (
 )
 from src.experiments.executor import (
     DatasetRegistry,
+    authorize_execution_mode,
     execute_benchmark_tasks,
     execute_confirmed_full_plan
 )
@@ -128,6 +137,14 @@ def main() -> None:
     if args.plan_only:
         print("Plan-only mode completed. No training was executed.")
         return
+
+    selected_mode = "benchmark" if args.benchmark else "full_run"
+
+    authorize_execution_mode(
+        mode=selected_mode,
+        base_config=base_config,
+        authorization_phrase=args.authorization
+    )
 
     datasets, configs_by_dataset = load_real_datasets_and_configs()
 

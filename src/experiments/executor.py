@@ -135,6 +135,52 @@ def _validate_authorization(
             f"Required phrase: '{required_phrase}'."
         )
 
+def authorize_execution_mode(
+    mode: str,
+    base_config: Dict[str, Any],
+    authorization_phrase: Optional[str]
+) -> None:
+    """
+    Validate authorization before loading real datasets or running tasks.
+
+    Supported modes
+    ---------------
+    - plan_only: never requires authorization and never executes training.
+    - benchmark: requires configured benchmark authorization phrase.
+    - full_run: requires configured final-run authorization phrase.
+    """
+    normalized_mode = mode.strip().lower()
+    execution_config = base_config["execution"]
+
+    if normalized_mode == "plan_only":
+        return
+
+    if normalized_mode == "benchmark":
+        if execution_config["benchmark_requires_confirmation"]:
+            _validate_authorization(
+                supplied_phrase=authorization_phrase,
+                required_phrase=execution_config[
+                    "benchmark_confirmation_phrase"
+                ],
+                action_name="benchmark execution"
+            )
+        return
+
+    if normalized_mode == "full_run":
+        if execution_config["full_run_requires_confirmation"]:
+            _validate_authorization(
+                supplied_phrase=authorization_phrase,
+                required_phrase=execution_config[
+                    "full_run_confirmation_phrase"
+                ],
+                action_name="full experiment execution"
+            )
+        return
+
+    raise ValueError(
+        "Unsupported controlled execution mode. "
+        "Expected 'plan_only', 'benchmark' or 'full_run'."
+    )
 
 def _add_task_metadata(
     row: Dict[str, Any],
@@ -468,14 +514,11 @@ def execute_benchmark_tasks(
     This is still real computation and therefore requires explicit
     benchmark authorization.
     """
-    execution_config = base_config["execution"]
-
-    if execution_config["benchmark_requires_confirmation"]:
-        _validate_authorization(
-            supplied_phrase=authorization_phrase,
-            required_phrase=execution_config["benchmark_confirmation_phrase"],
-            action_name="benchmark execution"
-        )
+    authorize_execution_mode(
+        mode="benchmark",
+        base_config=base_config,
+        authorization_phrase=authorization_phrase
+    )
 
     rows = []
 
@@ -505,12 +548,11 @@ def execute_confirmed_full_plan(
     """
     execution_config = base_config["execution"]
 
-    if execution_config["full_run_requires_confirmation"]:
-        _validate_authorization(
-            supplied_phrase=authorization_phrase,
-            required_phrase=execution_config["full_run_confirmation_phrase"],
-            action_name="full experiment execution"
-        )
+    authorize_execution_mode(
+        mode="full_run",
+        base_config=base_config,
+        authorization_phrase=authorization_phrase
+    )
 
     all_rows: list[Dict[str, Any]] = []
     completed_rows_by_task: Dict[str, list[Dict[str, Any]]] = {}
