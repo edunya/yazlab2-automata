@@ -265,3 +265,29 @@ def test_detailed_artifact_export_config():
     assert artifact_config["save_sample_predictions"] is True
     assert artifact_config["save_automata_explanations"] is True
     assert artifact_config["save_automata_transition_tables"] is True
+
+def test_reporting_config():
+    config = load_config()
+
+    reporting_config = config["reporting"]
+
+    assert reporting_config["primary_metric"] == "f1_score"
+    assert reporting_config["original_scenario"] == "original"
+
+    assert reporting_config["baseline_task_types"] == [
+        "deep_learning_robustness",
+        "automata_robustness"
+    ]
+
+    assert (
+        reporting_config["pool_prediction_curves_across_repeated_runs"]
+        is True
+    )
+
+    assert (
+        reporting_config["automata_curve_score"]
+        == "score_minus_calibrated_threshold"
+    )
+
+    assert reporting_config["generate_transition_figures"] is True
+    assert reporting_config["generate_parameter_heatmaps"] is True

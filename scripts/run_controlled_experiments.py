@@ -40,6 +40,7 @@ from src.experiments.executor import (
     execute_benchmark_tasks,
     execute_confirmed_full_plan
 )
+from src.reporting.result_report import generate_result_report_package
 from src.utils.config_loader import load_config
 
 
@@ -179,8 +180,17 @@ def main() -> None:
         output_dir=output_dir
     )
 
-    print(f"Result summary written to: {exported_result_paths['summary_json']}")
+    report_output = generate_result_report_package(
+        results_dir=output_dir,
+        output_dir=output_dir / "report_package",
+        dpi=int(base_config["visualization"]["dpi"]),
+        automata_graph_max_edges=int(
+            base_config["visualization"]["automata_graph_max_edges"]
+        )
+    )
 
+    print(f"Result summary written to: {exported_result_paths['summary_json']}")
+    print(f"Report package written to: {report_output['report_summary']}")
 
 if __name__ == "__main__":
     main()

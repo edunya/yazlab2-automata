@@ -147,5 +147,17 @@
         "figure_format": "png",
         "dpi": 300,
         "automata_graph_max_edges": 30
+    },
+    "reporting": {
+        "primary_metric": "f1_score",
+        "original_scenario": "original",
+        "baseline_task_types": [
+            "deep_learning_robustness",
+            "automata_robustness"
+        ],
+        "pool_prediction_curves_across_repeated_runs": true,
+        "automata_curve_score": "score_minus_calibrated_threshold",
+        "generate_transition_figures": true,
+        "generate_parameter_heatmaps": true
     }
 }
