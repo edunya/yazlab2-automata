@@ -77,7 +77,28 @@
     "experiments": {
         "scenarios": ["original", "gaussian_noise", "unseen"],
         "main_metric": "f1_score",
-        "metrics": ["accuracy", "precision", "recall", "f1_score"]
+        "metrics": ["accuracy", "precision", "recall", "f1_score"],
+        "robustness": {
+            "gaussian_noise": {
+                "levels": [0.01, 0.05, 0.10],
+                "apply_to": "test_only",
+                "scale_reference": "training_feature_standard_deviation",
+                "retrain_model": false,
+                "noise_seed": 2026
+            },
+            "unseen_analysis": {
+                "applies_to": ["automata"],
+                "report_seen_vs_unseen": true
+            }
+        },
+        "parameter_analysis": {
+            "automata": {
+                "context_length_fixed": 32,
+                "window_size_values": [3, 4, 5, 6],
+                "alphabet_size_values": [3, 4, 5, 6],
+                "primary_metric": "f1_score"
+            }
+        }
     },
     "paths": {
         "log_dir": "experiments/logs",

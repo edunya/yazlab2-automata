@@ -195,3 +195,29 @@ def test_evaluation_and_visualization_config():
     assert visualization_config["figure_format"] == "png"
     assert visualization_config["dpi"] == 300
     assert visualization_config["automata_graph_max_edges"] == 30
+
+def test_robustness_and_parameter_analysis_config():
+    config = load_config()
+
+    robustness_config = config["experiments"]["robustness"]
+    noise_config = robustness_config["gaussian_noise"]
+    unseen_config = robustness_config["unseen_analysis"]
+
+    assert noise_config["levels"] == [0.01, 0.05, 0.10]
+    assert noise_config["apply_to"] == "test_only"
+    assert (
+        noise_config["scale_reference"]
+        == "training_feature_standard_deviation"
+    )
+    assert noise_config["retrain_model"] is False
+    assert noise_config["noise_seed"] == 2026
+
+    assert unseen_config["applies_to"] == ["automata"]
+    assert unseen_config["report_seen_vs_unseen"] is True
+
+    parameter_config = config["experiments"]["parameter_analysis"]["automata"]
+
+    assert parameter_config["context_length_fixed"] == 32
+    assert parameter_config["window_size_values"] == [3, 4, 5, 6]
+    assert parameter_config["alphabet_size_values"] == [3, 4, 5, 6]
+    assert parameter_config["primary_metric"] == "f1_score"
