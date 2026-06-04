@@ -240,3 +240,19 @@ def test_execution_plan_config_requires_confirmation():
     assert default_setting["window_size"] == 4
     assert default_setting["alphabet_size"] == 3
     assert execution_config["result_export_formats"] == ["csv", "json"]
+
+def test_controlled_execution_guard_config():
+    config = load_config()
+
+    execution_config = config["execution"]
+
+    assert execution_config["full_run_requires_confirmation"] is True
+    assert execution_config["full_run_confirmation_phrase"] == "tamamla"
+
+    assert execution_config["benchmark_before_full_run"] is True
+    assert execution_config["benchmark_requires_confirmation"] is True
+    assert execution_config["benchmark_confirmation_phrase"] == "benchmark"
+
+    assert execution_config["benchmark_task_ids"] == [
+        "deep_learning_robustness__BATADAL__gru__seed42"
+    ]

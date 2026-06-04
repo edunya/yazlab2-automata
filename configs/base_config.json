@@ -102,7 +102,13 @@
     },
     "execution": {
         "full_run_requires_confirmation": true,
+        "full_run_confirmation_phrase": "tamamla",
         "benchmark_before_full_run": true,
+        "benchmark_requires_confirmation": true,
+        "benchmark_confirmation_phrase": "benchmark",
+        "benchmark_task_ids": [
+            "deep_learning_robustness__BATADAL__gru__seed42"
+        ],
         "skab_fold_count": 5,
         "reuse_default_automata_parameter_result": true,
         "default_automata_parameter_setting": {
