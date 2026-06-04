@@ -98,3 +98,22 @@ def test_preprocessing_and_windowing_config():
 
     assert config["windowing"]["sequence_length"] == 32
     assert config["windowing"]["label_strategy"] == "last_time_step"
+
+def test_model_architecture_config():
+    config = load_config()
+
+    lstm_config = config["models"]["architectures"]["lstm"]
+    gru_config = config["models"]["architectures"]["gru"]
+    cnn_config = config["models"]["architectures"]["cnn1d"]
+
+    assert lstm_config["hidden_size"] == 64
+    assert lstm_config["num_layers"] == 1
+    assert lstm_config["dropout"] == 0.2
+
+    assert gru_config["hidden_size"] == 64
+    assert gru_config["num_layers"] == 1
+    assert gru_config["dropout"] == 0.2
+
+    assert cnn_config["conv_channels"] == [32, 64]
+    assert cnn_config["kernel_size"] == 3
+    assert cnn_config["dropout"] == 0.2

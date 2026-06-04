@@ -15,9 +15,30 @@
         "optimizer": "adam",
         "loss_function": "binary_cross_entropy"
     },
+    
     "models": {
-        "enabled_models": ["lstm", "gru", "cnn1d", "automata"]
+        "enabled_models": ["lstm", "gru", "cnn1d", "automata"],
+        "architectures": {
+            "lstm": {
+                "hidden_size": 64,
+                "num_layers": 1,
+                "dropout": 0.2,
+                "bidirectional": false
+            },
+            "gru": {
+                "hidden_size": 64,
+                "num_layers": 1,
+                "dropout": 0.2,
+                "bidirectional": false
+            },
+            "cnn1d": {
+                "conv_channels": [32, 64],
+                "kernel_size": 3,
+                "dropout": 0.2
+            }
+        }
     },
+
     "preprocessing": {
         "normalization": "standard_scaler",
         "automata_dimension_reduction": "pca",
