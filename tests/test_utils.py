@@ -154,3 +154,14 @@ def test_automata_symbolic_config():
         automata_config["threshold_tie_break"]
         == "higher_precision_then_higher_threshold"
     )
+
+    assert (
+        automata_config["unseen_mapping_strategy"]
+        == "levenshtein_nearest_state"
+    )
+    assert automata_config["unseen_tie_break"] == "alphabetical_state"
+    assert (
+        automata_config["confidence_strategy"]
+        == "relative_threshold_margin"
+    )
+    assert automata_config["confidence_is_probability"] is False

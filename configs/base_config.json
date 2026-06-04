@@ -64,6 +64,10 @@
         "score_strategy": "mean_negative_log_probability",
         "threshold_strategy": "validation_best_f1",
         "threshold_tie_break": "higher_precision_then_higher_threshold",
+        "unseen_mapping_strategy": "levenshtein_nearest_state",
+        "unseen_tie_break": "alphabetical_state",
+        "confidence_strategy": "relative_threshold_margin",
+        "confidence_is_probability": false,
         "smoothing": 1e-8
     },
     "experiments": {
