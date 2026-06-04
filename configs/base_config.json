@@ -82,5 +82,23 @@
         "predictions_dir": "experiments/predictions",
         "figures_dir": "reports/figures",
         "tables_dir": "reports/tables"
+    },
+    "evaluation": {
+        "classification_metrics": [
+            "accuracy",
+            "precision",
+            "recall",
+            "f1_score",
+            "roc_auc",
+            "average_precision"
+        ],
+        "deep_learning_probability_threshold": 0.5,
+        "score_positive_direction": "higher_score_is_anomaly",
+        "zero_division": 0
+    },
+    "visualization": {
+        "figure_format": "png",
+        "dpi": 300,
+        "automata_graph_max_edges": 30
     }
 }

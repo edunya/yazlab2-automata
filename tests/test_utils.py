@@ -165,3 +165,23 @@ def test_automata_symbolic_config():
         == "relative_threshold_margin"
     )
     assert automata_config["confidence_is_probability"] is False
+
+def test_evaluation_and_visualization_config():
+    config = load_config()
+
+    evaluation_config = config["evaluation"]
+    visualization_config = config["visualization"]
+
+    assert "f1_score" in evaluation_config["classification_metrics"]
+    assert "roc_auc" in evaluation_config["classification_metrics"]
+    assert "average_precision" in evaluation_config["classification_metrics"]
+
+    assert evaluation_config["deep_learning_probability_threshold"] == 0.5
+    assert (
+        evaluation_config["score_positive_direction"]
+        == "higher_score_is_anomaly"
+    )
+
+    assert visualization_config["figure_format"] == "png"
+    assert visualization_config["dpi"] == 300
+    assert visualization_config["automata_graph_max_edges"] == 30
