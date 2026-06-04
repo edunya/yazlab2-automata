@@ -3,12 +3,12 @@
         "name": "SKAB",
         "raw_data_dir": "data/raw/SKAB",
         "processed_data_dir": "data/processed/SKAB",
-        "used_groups": [
-            "valve1",
-            "valve2"
-        ],
+        "used_groups": ["valve1", "valve2"],
+        "csv_separator": ";",
         "target_column": "anomaly",
         "group_column": "source_file",
+        "source_group_column": "source_group",
+        "source_file_column": "source_file",
         "excluded_columns": [
             "datetime",
             "changepoint",
